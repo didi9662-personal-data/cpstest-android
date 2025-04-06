@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-bottom: 30px;
+        }
+
+        #menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #menu button {
+            padding: 10px 15px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #menu button:hover {
+            background-color: #004d40;
+        }
+
+        #menu button.active {
+            background-color: #004d40;
+        }
+
+        #clickerSection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #clickButton {
+            padding: 20px 40px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+        }
+
+        #clickButton:hover {
+            background-color: #004d40;
+        }
+
+        #clickButton:active {
+            transform: scale(0.95);
+        }
+
+        #instructions {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #00796b;
+            border-radius: 5px;
+            width: 100px;
+            text-align: center;
+        }
+
+        #results {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clicker Test</h1>
+    
+    <div id="menu">
+        <button id="btnClicker" class="active">Clicker de Botón</button>
+    </div>
+
+    <div id="clickerSection">
+        <div id="instructions"><strong>¡Haz clic en el botón tantas veces como puedas!</strong></div>
+        <input type="number" id="timeInput" placeholder="Segundos" min="1" max="60" value="5" />
+        <button id="clickButton">Haz clic aquí</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const btnClicker = document.getElementById('btnClicker');
+        const clickerSection = document.getElementById('clickerSection');
+        const clickButton = document.getElementById('clickButton');
+        const timeInput = document.getElementById('timeInput');
+        const resultsDiv = document.getElementById('results');
+
+        let clicks = 0;
+        let timer;
+        let isTestRunning = false;
+
+        function startTest(duration) {
+            clicks = 0;
+            isTestRunning = true;
+            resultsDiv.textContent = '';
+
+            timer = setTimeout(() => {
+                isTestRunning = false;
+                const cps = (clicks / duration).toFixed(2);
+                resultsDiv.innerHTML = `
+                    <p>Total de clics: ${clicks}</p>
+                    <p>Clics por segundo: ${cps}CPS</p>
+                `;
+            }, duration * 1000);
+        }
+
+        function stopTest() {
+            if (isTestRunning) {
+                clearTimeout(timer);
+                isTestRunning = false;
+                resultsDiv.textContent = 'Test detenido';
+            }
+        }
+
+        clickButton.addEventListener('click', function() {
+            if (!isTestRunning) {
+                const duration = parseInt(timeInput.value);
+                if (duration >= 1 && duration <= 60) {
+                    startTest(duration);
+                } else {
+                    alert('Por favor, ingresa un valor entre 1 y 60 segundos');
+                    return;
+                }
+            }
+            clicks++;
+        });
+    </script>
+</body>
+</html>
